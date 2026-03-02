@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muhammad Saad — CV</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f1c2e;
+    --accent: #1a56db;
+    --accent-light: #e8f0fe;
+    --sidebar: #f4f6fb;
+    --text: #1e2b3c;
+    --muted: #64748b;
+    --border: #dde3ef;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #e9ecf4;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+
+  .page {
+    width: 860px;
+    background: var(--white);
+    border-radius: 4px;
+    box-shadow: 0 8px 40px rgba(15,28,46,0.14), 0 2px 8px rgba(15,28,46,0.06);
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    overflow: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    background: var(--sidebar);
+    border-right: 1px solid var(--border);
+    padding: 0 0 40px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Name hero in sidebar */
+  .hero {
+    background: var(--navy);
+    padding: 40px 28px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -24px; left: 0; right: 0;
+    height: 48px;
+    background: var(--sidebar);
+    clip-path: ellipse(60% 100% at 50% 100%);
+  }
+
+  .hero-initials {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent) 0%, #3b82f6 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 16px rgba(26,86,219,0.4);
+  }
+
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+    letter-spacing: 0.3px;
+  }
+
+  .hero-title {
+    margin-top: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .sidebar-body {
+    padding: 40px 28px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .s-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .s-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Contact */
+  .contact-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12.5px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .contact-icon {
+    width: 28px; height: 28px;
+    background: var(--accent-light);
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .contact-icon svg {
+    width: 14px; height: 14px;
+    stroke: var(--accent);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Skills */
+  .skill-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .skill-item { display: flex; flex-direction: column; gap: 4px; }
+
+  .skill-name {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .skill-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .skill-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #60a5fa);
+    border-radius: 99px;
+  }
+
+  /* Languages */
+  .lang-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .lang-item {}
+
+  .lang-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+
+  .lang-name { font-size: 13px; font-weight: 500; color: var(--text); }
+  .lang-level { font-size: 10.5px; color: var(--muted); }
+
+  .lang-dots {
+    display: flex;
+    gap: 4px;
+  }
+
+  .lang-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+
+  .lang-dot.filled { background: var(--accent); }
+
+  /* ── MAIN ── */
+  .main {
+    padding: 44px 40px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  /* Main header */
+  .main-header {
+    border-bottom: 2px solid var(--navy);
+    padding-bottom: 20px;
+  }
+
+  .main-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+
+  .main-role {
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* Section */
+  .section {}
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title span {
+    display: inline-block;
+    width: 24px;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  /* About */
+  .about-text {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  /* Experience */
+  .exp-list { display: flex; flex-direction: column; gap: 24px; }
+
+  .exp-item { position: relative; padding-left: 18px; }
+
+  .exp-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 6px;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-light);
+  }
+
+  .exp-item::after {
+    content: '';
+    position: absolute;
+    left: 3px; top: 18px; bottom: -18px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .exp-item:last-child::after { display: none; }
+
+  .exp-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 2px;
+    flex-wrap: wrap;
+  }
+
+  .exp-company {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  .exp-date {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 2px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .exp-role {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 6px;
+  }
+
+  .exp-desc {
+    font-size: 13px;
+    color: #4a5568;
+    line-height: 1.75;
+  }
+
+  /* Education */
+  .edu-list { display: flex; flex-direction: column; gap: 18px; }
+
+  .edu-item {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+
+  .edu-year {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    padding-top: 2px;
+  }
+
+  .edu-body {}
+
+  .edu-degree {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 2px;
+  }
+
+  .edu-school {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .edu-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 0 0 70px;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="hero">
+      <div class="hero-initials">MS</div>
+      <div class="hero-name">Muhammad<br>Saad</div>
+      <div class="hero-title">IT Professional</div>
+    </div>
+
+    <div class="sidebar-body">
+
+      <!-- Contact -->
+      <div>
+        <div class="s-section-title">Contact</div>
+        <div class="contact-list">
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .18h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg>
+            </div>
+            <span>03005674929</span>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <span style="word-break:break-all">muhammadsaad4955@gmail.com</span>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <span>House no 2, Street no 2, Dhok Hafiz, Old Airport Road, Rawalpindi</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expertise -->
+      <div>
+        <div class="s-section-title">Expertise</div>
+        <div class="skill-list">
+          <div class="skill-item">
+            <div class="skill-name">MS Office</div>
+            <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">Analytical Skills</div>
+            <div class="skill-bar"><div class="skill-fill" style="width:82%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">Computer Hardware</div>
+            <div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">Critical Thinking</div>
+            <div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">Leadership</div>
+            <div class="skill-bar"><div class="skill-fill" style="width:78%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">Database Development</div>
+            <div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Languages -->
+      <div>
+        <div class="s-section-title">Languages</div>
+        <div class="lang-list">
+          <div class="lang-item">
+            <div class="lang-header">
+              <span class="lang-name">Urdu</span>
+              <span class="lang-level">Native</span>
+            </div>
+            <div class="lang-dots">
+              <div class="lang-dot filled"></div>
+              <div class="lang-dot filled"></div>
+              <div class="lang-dot filled"></div>
+              <div class="lang-dot filled"></div>
+              <div class="lang-dot filled"></div>
+            </div>
+          </div>
+          <div class="lang-item">
+            <div class="lang-header">
+              <span class="lang-name">English</span>
+              <span class="lang-level">Proficient</span>
+            </div>
+            <div class="lang-dots">
+              <div class="lang-dot filled"></div>
+              <div class="lang-dot filled"></div>
+              <div class="lang-dot filled"></div>
+              <div class="lang-dot filled"></div>
+              <div class="lang-dot"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="main-header">
+      <div class="main-name">Muhammad Saad</div>
+      <div class="main-role">IT Professional &amp; Office Administrator</div>
+    </div>
+
+    <!-- About -->
+    <div class="section">
+      <div class="section-title"><span></span>About Me</div>
+      <p class="about-text">Committed, focused, and dedicated IT professional with strong leadership qualities. Known for a hands-on approach, excellent problem-solving skills, and the ability to lead projects and teams under pressure.</p>
+    </div>
+
+    <!-- Experience -->
+    <div class="section">
+      <div class="section-title"><span></span>Experience</div>
+      <div class="exp-list">
+
+        <div class="exp-item">
+          <div class="exp-header">
+            <div class="exp-company">Cybercom</div>
+            <div class="exp-date">Jan 2025 – May 2025</div>
+          </div>
+          <div class="exp-role">Office Administrator</div>
+          <div class="exp-desc">Committed to supporting day-to-day office operations with efficiency and professionalism. Skilled in document preparation, data entry, scheduling, and providing basic IT support within an office environment.</div>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-header">
+            <div class="exp-company">Ultralap</div>
+            <div class="exp-date">Jun 2024 – Dec 2024</div>
+          </div>
+          <div class="exp-role">Data Entry Operator</div>
+          <div class="exp-desc">Skilled in fast and accurate typing, data verification, and document organization. Known for being focused, reliable, and able to meet tight deadlines with high accuracy.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Education -->
+    <div class="section">
+      <div class="section-title"><span></span>Education</div>
+      <div class="edu-list">
+
+        <div class="edu-item">
+          <div class="edu-year">2024</div>
+          <div class="edu-body">
+            <div class="edu-degree">Intermediate in Computer Sciences</div>
+            <div class="edu-school">Punjab College</div>
+          </div>
+        </div>
+
+        <div class="edu-divider"></div>
+
+        <div class="edu-item">
+          <div class="edu-year">2022</div>
+          <div class="edu-body">
+            <div class="edu-degree">Matriculation</div>
+            <div class="edu-school">Army Public School</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+</div>
+</body>
+</html>
