@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BSCS-IV-C (Shift-I) Timetable</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --card: #1a2235;
+    --border: rgba(99,120,180,0.18);
+    --accent1: #4f8ef7;
+    --accent2: #a78bfa;
+    --accent3: #34d399;
+    --accent4: #fb923c;
+    --accent5: #f472b6;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --label: #94a3b8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 40px 24px;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(79,142,247,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(167,139,250,0.10) 0%, transparent 50%);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: fadeDown 0.7s ease both;
+  }
+
+  .header .badge {
+    display: inline-block;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent1);
+    border: 1px solid rgba(79,142,247,0.35);
+    padding: 5px 16px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    background: rgba(79,142,247,0.07);
+  }
+
+  .header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 5vw, 60px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #fff 30%, var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+  }
+
+  .header .sub {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    box-shadow: 0 25px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03);
+    animation: fadeUp 0.8s ease both 0.2s;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 1000px;
+    background: var(--surface);
+  }
+
+  /* Time header row */
+  thead tr th {
+    background: var(--card);
+    padding: 14px 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent1);
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  thead tr th:first-child {
+    color: var(--muted);
+    font-size: 10px;
+    width: 70px;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+
+  tbody tr:hover { background: rgba(79,142,247,0.04); }
+
+  /* Day label cells */
+  .day-cell {
+    text-align: center;
+    padding: 10px 6px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 28px;
+    letter-spacing: -1px;
+    border-right: 1px solid var(--border);
+    vertical-align: middle;
+    position: relative;
+    min-width: 70px;
+  }
+
+  .day-mo { color: var(--accent1); }
+  .day-tu { color: var(--accent2); }
+  .day-we { color: var(--accent3); }
+  .day-th { color: var(--accent4); }
+  .day-fr { color: var(--accent5); }
+
+  /* Class cells */
+  td {
+    border-right: 1px solid var(--border);
+    vertical-align: top;
+    padding: 0;
+  }
+
+  .cell-inner {
+    padding: 10px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    height: 100%;
+    min-height: 90px;
+    position: relative;
+  }
+
+  .empty-cell { min-height: 90px; }
+
+  .teacher {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .subject {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--label);
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .room {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 5px;
+    display: inline-block;
+    align-self: flex-start;
+    margin-top: 4px;
+    letter-spacing: 0.3px;
+  }
+
+  /* Color variants per subject type */
+  .type-cs .cell-inner {
+    border-left: 3px solid var(--accent1);
+    background: linear-gradient(135deg, rgba(79,142,247,0.06) 0%, transparent 70%);
+  }
+  .type-cs .teacher { color: var(--accent1); }
+  .type-cs .room { background: rgba(79,142,247,0.15); color: var(--accent1); }
+
+  .type-math .cell-inner {
+    border-left: 3px solid var(--accent3);
+    background: linear-gradient(135deg, rgba(52,211,153,0.06) 0%, transparent 70%);
+  }
+  .type-math .teacher { color: var(--accent3); }
+  .type-math .room { background: rgba(52,211,153,0.15); color: var(--accent3); }
+
+  .type-hum .cell-inner {
+    border-left: 3px solid var(--accent5);
+    background: linear-gradient(135deg, rgba(244,114,182,0.06) 0%, transparent 70%);
+  }
+  .type-hum .teacher { color: var(--accent5); }
+  .type-hum .room { background: rgba(244,114,182,0.15); color: var(--accent5); }
+
+  .type-lab .cell-inner {
+    border-left: 3px solid var(--accent4);
+    background: linear-gradient(135deg, rgba(251,146,60,0.06) 0%, transparent 70%);
+  }
+  .type-lab .teacher { color: var(--accent4); }
+  .type-lab .room { background: rgba(251,146,60,0.15); color: var(--accent4); }
+
+  .type-advisory .cell-inner {
+    border-left: 3px solid var(--accent2);
+    background: linear-gradient(135deg, rgba(167,139,250,0.06) 0%, transparent 70%);
+  }
+  .type-advisory .teacher { color: var(--accent2); }
+  .type-advisory .room { background: rgba(167,139,250,0.15); color: var(--accent2); }
+
+  /* Span cells for labs */
+  .span-cell .cell-inner {
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 90px;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    animation: fadeUp 0.8s ease both 0.4s;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.7s ease both 0.15s;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    color: var(--label);
+    font-weight: 500;
+  }
+
+  .legend-dot {
+    width: 10px; height: 10px; border-radius: 3px;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">Air University · Semester Schedule</div>
+  <h1>BSCS‑IV‑C (Shift‑I)</h1>
+  <p class="sub">Timetable generated: 2/18/2026</p>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent1)"></div>CS / Software</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent3)"></div>Mathematics</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent5)"></div>Humanities</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent4)"></div>Lab Session</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div>Advisory</div>
+</div>
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Day</th>
+      <th>7:45 – 8:25</th>
+      <th>8:25 – 9:05</th>
+      <th>9:05 – 9:45</th>
+      <th>9:45 – 10:25</th>
+      <th>10:25 – 11:05</th>
+      <th>11:05 – 11:45</th>
+      <th>11:45 – 12:25</th>
+      <th>12:25 – 1:05</th>
+      <th>1:05 – 1:45</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <!-- MONDAY -->
+    <tr>
+      <td class="day-cell day-mo">Mo</td>
+      <td><div class="empty-cell"></div></td>
+      <td class="type-hum">
+        <div class="cell-inner">
+          <div class="teacher">HUM-Ms Saman Noor-VFM</div>
+          <div class="subject">Civics and Community Engagement</div>
+          <div class="room">C-201 (Shift-I)</div>
+        </div>
+      </td>
+      <td class="type-cs">
+        <div class="cell-inner">
+          <div class="teacher">CS-Dr Maryum Nisar</div>
+          <div class="subject">Software Engineering</div>
+          <div class="room">C-301 (Shift-I)</div>
+        </div>
+      </td>
+      <td class="type-cs">
+        <div class="cell-inner">
+          <div class="teacher">CS-Ms Romana Maroof</div>
+          <div class="subject">Computer Organization and Assembly Language</div>
+          <div class="room">C-302 (Shift-I)</div>
+        </div>
+      </td>
+      <td><div class="empty-cell"></div></td>
+      <td><div class="empty-cell"></div></td>
+      <td><div class="empty-cell"></div></td>
+      <td><div class="empty-cell"></div></td>
+      <td><div class="empty-cell"></div></td>
+    </tr>
+
+    <!-- TUESDAY -->
+    <tr>
+      <td class="day-cell day-tu">Tu</td>
+      <td class="type-hum">
+        <div class="cell-inner">
+          <div class="teacher">HUM-Ms Saman Noor-VFM</div>
+          <div class="subject">Civics and Community Engagement</div>
+          <div class="room">C-303 (Shift-I)</div>
+        </div>
+      </td>
+      <td><div class="empty-cell"></div></td>
+      <td class="type-cs">
+        <div class="cell-inner">
+          <div class="teacher">CS-Ms Sara Mishal</div>
+          <div class="subject">Computer Networks</div>
+          <div class="room">C-303 (Shift-I)</div>
+        </div>
+      </td>
+      <td><div class="empty-cell"></div></td>
+      <td class="type-cs">
+        <div class="cell-inner">
+          <div class="teacher">CS-Mr Hafiz Obiad ullah Khan</div>
+          <div class="subject">Visual Programming</div>
+          <div class="room">C-304 (Shift-I)</div>
+        </div>
+      </td>
+      <td><div class="empty-cell"></div></td>
+      <td class="type-lab" colspan="3">
+        <div class="cell-inner span-cell">
+          <div class="teacher">CS-Mr Hafiz Obiad ullah Khan</div>
+          <div class="subject">Visual Programming Lab</div>
+          <div class="room">Lab 12 C Block (2nd Floor) (Shift-I)</div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- WEDNESDAY -->
+    <tr>
+      <td class="day-cell day-we">We</td>
+      <td><div class="empty-cell"></div></td>
+      <td class="type-math">
+        <div class="cell-inner">
+          <div class="teacher">Maths-Ms Sumaira Nadeem-VFM</div>
+          <div class="subject">Multivariable Calculus</div>
+          <div class="room">C-305 (Shift-I)</div>
+        </div>
+      </td>
+      <td class="type-cs">
+        <div class="cell-inner">
+          <div class="teacher">CS-Dr Maryum Nisar</div>
+          <div class="subject">Software Engineering</div>
+          <div class="room">C-304 (Shift-I)</div>
+        </div>
+      </td>
+      <td class="type-cs">
+        <div class="cell-inner">
+          <div class="teacher">CS-Mr Hafiz Obiad ullah Khan</div>
+          <div class="subject">Visual Programming</div>
+          <div class="room">C-206 (Shift-I)</div>
+        </div>
+      </td>
+      <td><div class="empty-cell"></div></td>
+      <td class="type-cs">
+        <div class="cell-inner">
+          <div class="teacher">CS-Ms Sara Mishal</div>
+          <div class="subject">Computer Networks</div>
+          <div class="room">C-206 (Shift-I)</div>
+        </div>
+      </td>
+      <td class="type-lab" colspan="3">
+        <div class="cell-inner span-cell">
+          <div class="teacher">CS-Mr Muhammad Bilal</div>
+          <div class="subject">Computer Networks Lab</div>
+          <div class="room">Lab 12 C Block (2nd Floor) (Shift-I)</div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- THURSDAY -->
+    <tr>
+      <td class="day-cell day-th">Th</td>
+      <td><div class="empty-cell"></div></td>
+      <td class="type-math">
+        <div class="cell-inner">
+          <div class="teacher">Maths-Ms Sumaira Nadeem-VFM</div>
+          <div class="subject">Multivariable Calculus</div>
+          <div class="room">C-301 (Shift-I)</div>
+        </div>
+      </td>
+      <td class="type-advisory">
+        <div class="cell-inner">
+          <div class="teacher">CS-Mr Muhammad Bilal</div>
+          <div class="subject">Advisory Class</div>
+          <div class="room">C-301 (Shift-I)</div>
+        </div>
+      </td>
+      <td class="type-cs">
+        <div class="cell-inner">
+          <div class="teacher">CS-Ms Romana Maroof</div>
+          <div class="subject">Computer Organization and Assembly Language</div>
+          <div class="room">C-205 (Shift-I)</div>
+        </div>
+      </td>
+      <td class="type-cs">
+        <div class="cell-inner">
+          <div class="teacher">CS-Dr Maryum Nisar</div>
+          <div class="subject">Software Engineering</div>
+          <div class="room">C-306 (Shift-I)</div>
+        </div>
+      </td>
+      <td><div class="empty-cell"></div></td>
+      <td class="type-lab" colspan="3">
+        <div class="cell-inner span-cell">
+          <div class="teacher">CS-Ms Romana Maroof</div>
+          <div class="subject">Computer Organization and Assembly Language Lab</div>
+          <div class="room">Lab 12 C Block (2nd Floor) (Shift-I)</div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- FRIDAY -->
+    <tr>
+      <td class="day-cell day-fr">Fr</td>
+      <td><div class="empty-cell"></div></td>
+      <td><div class="empty-cell"></div></td>
+      <td class="type-math">
+        <div class="cell-inner">
+          <div class="teacher">Maths-Ms Sumaira Nadeem-VFM</div>
+          <div class="subject">Multivariable Calculus</div>
+          <div class="room">C-202 (Shift-I)</div>
+        </div>
+      </td>
+      <td><div class="empty-cell"></div></td>
+      <td><div class="empty-cell"></div></td>
+      <td><div class="empty-cell"></div></td>
+      <td><div class="empty-cell"></div></td>
+      <td><div class="empty-cell"></div></td>
+      <td><div class="empty-cell"></div></td>
+    </tr>
+
+  </tbody>
+</table>
+</div>
+
+<div class="footer">
+  Air University &nbsp;·&nbsp; BSCS-IV-C (Shift-I) &nbsp;·&nbsp; aSc Timetables
+</div>
+
+</body>
+</html>
